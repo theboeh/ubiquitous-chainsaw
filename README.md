@@ -58,4 +58,8 @@ This process can be executed by running:
 
     make
 
+Running Make multiple times will execute the process for copying the file from Instance A to Instance B. If you want to rerun the whole process you will need to run `make clean` first.
 
+## Sample Execution
+
+[docs/sample_execution.txt](docs/sample_execution.txt) contains the output of a single run.
