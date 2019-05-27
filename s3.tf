@@ -4,8 +4,9 @@ resource "aws_kms_key" "s3_key" {
 }
 
 resource "aws_s3_bucket" "bucket" {
-  bucket = "${data.external.local_info.result.user}.${data.external.local_info.result.hostname}.inivog"
-  acl    = "private"
+  bucket        = "${data.external.local_info.result.user}.${data.external.local_info.result.hostname}.inivog"
+  acl           = "private"
+  force_destroy = true
 
   server_side_encryption_configuration {
     rule {
