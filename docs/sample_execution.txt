@@ -1,0 +1,219 @@
+$ make
+terraform init
+
+Initializing the backend...
+
+Initializing provider plugins...
+- Checking for available provider plugins...
+- Downloading plugin for provider "external" (terraform-providers/external) 1.1.2...
+- Downloading plugin for provider "aws" (terraform-providers/aws) 2.12.0...
+
+The following providers do not have any version constraints in configuration,
+so the latest version was installed.
+
+To prevent automatic upgrades to new major versions that may contain breaking
+changes, it is recommended to add version = "..." constraints to the
+corresponding provider blocks in configuration, with the constraint strings
+suggested below.
+
+* provider.external: version = "~> 1.1"
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+terraform apply -auto-approve
+data.external.local_info: Refreshing state...
+aws_key_pair.deployer: Creating...
+aws_security_group.allow_myself: Creating...
+aws_kms_key.s3_key: Creating...
+aws_key_pair.deployer: Creation complete after 0s [id=boeh@oolong]
+aws_kms_key.s3_key: Creation complete after 1s [id=ecb2176b-3c49-47db-b38e-51263333ea59]
+aws_s3_bucket.bucket: Creating...
+aws_security_group.allow_myself: Creation complete after 2s [id=sg-0206d4627889299c4]
+aws_instance.instance_a: Creating...
+aws_instance.instance_b: Creating...
+aws_s3_bucket.bucket: Creation complete after 3s [id=boeh.oolong.inivog]
+aws_s3_bucket_public_access_block.s3_access_block: Creating...
+aws_s3_bucket_public_access_block.s3_access_block: Creation complete after 0s [id=boeh.oolong.inivog]
+aws_instance.instance_a: Still creating... [10s elapsed]
+aws_instance.instance_b: Still creating... [10s elapsed]
+aws_instance.instance_a: Still creating... [20s elapsed]
+aws_instance.instance_b: Still creating... [20s elapsed]
+aws_instance.instance_a: Still creating... [30s elapsed]
+aws_instance.instance_b: Still creating... [30s elapsed]
+aws_instance.instance_a: Provisioning with 'local-exec'...
+aws_instance.instance_b: Provisioning with 'local-exec'...
+aws_instance.instance_a (local-exec): Executing: ["/bin/sh" "-c" "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ansible/provision_instance_a.yaml -i 3.86.242.47, -u ec2-user"]
+aws_instance.instance_b (local-exec): Executing: ["/bin/sh" "-c" "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ansible/provision_instance_b.yaml -i 54.164.53.155, -u ubuntu"]
+
+aws_instance.instance_b (local-exec): PLAY [Wait for connection] *****************************************************
+
+aws_instance.instance_b (local-exec): TASK [waiting...] **************************************************************
+
+aws_instance.instance_a (local-exec): PLAY [Wait for ssh to be available] ********************************************
+
+aws_instance.instance_a (local-exec): TASK [waiting...] **************************************************************
+aws_instance.instance_a: Still creating... [40s elapsed]
+aws_instance.instance_b: Still creating... [40s elapsed]
+aws_instance.instance_a: Still creating... [50s elapsed]
+aws_instance.instance_b: Still creating... [50s elapsed]
+aws_instance.instance_b (local-exec): ok: [54.164.53.155]
+
+aws_instance.instance_b (local-exec): PLAY [Provision Instance B] ****************************************************
+
+aws_instance.instance_b (local-exec): TASK [Gathering Facts] *********************************************************
+aws_instance.instance_b (local-exec): ok: [54.164.53.155]
+
+aws_instance.instance_b (local-exec): TASK [Install xfs and raid tools] **********************************************
+aws_instance.instance_a: Still creating... [1m0s elapsed]
+aws_instance.instance_b: Still creating... [1m0s elapsed]
+aws_instance.instance_a: Still creating... [1m10s elapsed]
+aws_instance.instance_b: Still creating... [1m10s elapsed]
+aws_instance.instance_a (local-exec): ok: [3.86.242.47]
+
+aws_instance.instance_a (local-exec): PLAY [Provision Instance A] ****************************************************
+
+aws_instance.instance_a (local-exec): TASK [Gathering Facts] *********************************************************
+aws_instance.instance_a (local-exec): ok: [3.86.242.47]
+
+aws_instance.instance_a (local-exec): TASK [Create partition] ********************************************************
+aws_instance.instance_a (local-exec): changed: [3.86.242.47]
+
+aws_instance.instance_a (local-exec): TASK [Install xfs tools] *******************************************************
+aws_instance.instance_a: Still creating... [1m20s elapsed]
+aws_instance.instance_b: Still creating... [1m20s elapsed]
+aws_instance.instance_a (local-exec):  [WARNING]: Consider using the yum module rather than running 'yum'.  If you
+aws_instance.instance_a (local-exec): need to use command because yum is insufficient you can add 'warn: false' to
+aws_instance.instance_a (local-exec): this command task or set 'command_warnings=False' in ansible.cfg to get rid of
+aws_instance.instance_a (local-exec): this message.
+aws_instance.instance_a (local-exec): changed: [3.86.242.47]
+
+aws_instance.instance_a (local-exec): TASK [Create xfs filesystem] ***************************************************
+aws_instance.instance_a (local-exec): changed: [3.86.242.47]
+
+aws_instance.instance_a (local-exec): TASK [Create /dataup directory] ************************************************
+aws_instance.instance_a (local-exec): changed: [3.86.242.47]
+
+aws_instance.instance_a (local-exec): TASK [Mount /dev/sdb1 to /dataup] **********************************************
+aws_instance.instance_a (local-exec): changed: [3.86.242.47]
+
+aws_instance.instance_a (local-exec): TASK [Reboot] ******************************************************************
+aws_instance.instance_a: Still creating... [1m30s elapsed]
+aws_instance.instance_b: Still creating... [1m30s elapsed]
+aws_instance.instance_b (local-exec): changed: [54.164.53.155]
+
+aws_instance.instance_b (local-exec): TASK [Create raid array] *******************************************************
+aws_instance.instance_b (local-exec): changed: [54.164.53.155]
+
+aws_instance.instance_b (local-exec): TASK [Persist raid array] ******************************************************
+aws_instance.instance_b (local-exec): changed: [54.164.53.155]
+
+aws_instance.instance_b (local-exec): TASK [Update initramfs] ********************************************************
+aws_instance.instance_a: Still creating... [1m40s elapsed]
+aws_instance.instance_b: Still creating... [1m40s elapsed]
+aws_instance.instance_b (local-exec): changed: [54.164.53.155]
+
+aws_instance.instance_b (local-exec): TASK [Create xfs filesystem] ***************************************************
+aws_instance.instance_b (local-exec): changed: [54.164.53.155]
+
+aws_instance.instance_b (local-exec): TASK [Create /datadown directory] **********************************************
+aws_instance.instance_b (local-exec): changed: [54.164.53.155]
+
+aws_instance.instance_b (local-exec): TASK [Mount /dev/md0 to /datadown] *********************************************
+aws_instance.instance_b (local-exec): changed: [54.164.53.155]
+
+aws_instance.instance_b (local-exec): TASK [Reboot] ******************************************************************
+aws_instance.instance_a: Still creating... [1m50s elapsed]
+aws_instance.instance_b: Still creating... [1m50s elapsed]
+aws_instance.instance_a: Still creating... [2m0s elapsed]
+aws_instance.instance_b: Still creating... [2m0s elapsed]
+aws_instance.instance_a: Still creating... [2m10s elapsed]
+aws_instance.instance_b: Still creating... [2m10s elapsed]
+aws_instance.instance_a: Still creating... [2m20s elapsed]
+aws_instance.instance_b: Still creating... [2m20s elapsed]
+aws_instance.instance_a (local-exec): changed: [3.86.242.47]
+
+aws_instance.instance_a (local-exec): PLAY RECAP *********************************************************************
+aws_instance.instance_a (local-exec): 3.86.242.47                : ok=8    changed=6    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+aws_instance.instance_a: Creation complete after 2m30s [id=i-067cde191922011ff]
+aws_instance.instance_b: Still creating... [2m30s elapsed]
+aws_instance.instance_b (local-exec): changed: [54.164.53.155]
+
+aws_instance.instance_b (local-exec): PLAY RECAP *********************************************************************
+aws_instance.instance_b (local-exec): 54.164.53.155              : ok=10   changed=8    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+aws_instance.instance_b: Creation complete after 2m38s [id=i-09498147f8106622d]
+
+Apply complete! Resources: 7 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+instance_a_ip = 3.86.242.47
+instance_b_ip = 54.164.53.155
+my_hostname = oolong
+my_ip = 100.6.46.83
+my_user = boeh
+s3_bucket = boeh.oolong.inivog
+terraform output | awk -f scripts/make_inventory.awk > .tmp/inventory.ini
+ansible-playbook ansible/copy.yaml -i .tmp/inventory.ini
+
+PLAY [Copy from Instance A to s3] **********************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [3.86.242.47]
+
+TASK [Install AWS CLI] *********************************************************
+ok: [3.86.242.47]
+
+TASK [Create test file] ********************************************************
+changed: [3.86.242.47]
+
+TASK [Check test file] *********************************************************
+changed: [3.86.242.47]
+
+TASK [Show test file contents] *************************************************
+ok: [3.86.242.47] => {
+    "msg": [
+        "ip-172-31-93-166.ec2.internal", 
+        "Mon May 27 19:07:23 UTC 2019"
+    ]
+}
+
+TASK [Upload test file to s3] **************************************************
+changed: [3.86.242.47]
+
+PLAY [Copy from s3 to Instance B] **********************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [54.164.53.155]
+
+TASK [Install Pip] *************************************************************
+changed: [54.164.53.155]
+
+TASK [Install AWS CLI] *********************************************************
+changed: [54.164.53.155]
+
+TASK [download test file from s3] **********************************************
+changed: [54.164.53.155]
+
+TASK [Check test file] *********************************************************
+changed: [54.164.53.155]
+
+TASK [Show test file contents] *************************************************
+ok: [54.164.53.155] => {
+    "msg": [
+        "ip-172-31-93-166.ec2.internal", 
+        "Mon May 27 19:07:23 UTC 2019"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+3.86.242.47                : ok=6    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+54.164.53.155              : ok=6    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
