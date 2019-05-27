@@ -1,0 +1,52 @@
+---
+
+- name: Copy from Instance A to s3
+  hosts: instance_a
+  become: yes
+  tasks:
+    - name: Install AWS CLI
+      pip:
+        name: awscli
+
+    - name: Create test file
+      shell: hostname -f > /dataup/test.txt; date >> /dataup/test.txt
+
+    - name: Check test file
+      command: cat /dataup/test.txt
+      register: test_file_a
+
+    - name: Show test file contents
+      debug:
+        msg: "{{ test_file_a.stdout_lines }}"
+
+    - name: Upload test file to s3
+      command: "aws s3 cp /dataup/test.txt s3://{{ s3_bucket }}/test.txt"
+      environment:
+        AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+
+- name: Copy from s3 to Instance B
+  hosts: instance_b
+  become: yes
+  tasks:
+    - name: Install Pip
+      apt:
+        name: python-pip
+
+    - name: Install AWS CLI
+      pip:
+        name: awscli
+
+    - name: download test file from s3
+      command: "aws s3 cp s3://{{ s3_bucket }}/test.txt /datadown/test.txt"
+      environment:
+        AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+
+    - name: Check test file
+      command: cat /datadown/test.txt
+      register: test_file_b
+
+    - name: Show test file contents
+      debug:
+        msg: "{{ test_file_b.stdout_lines }}"

@@ -1,0 +1,42 @@
+---
+
+- name: Wait for ssh to be available
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: waiting...
+      wait_for_connection:
+
+- name: Provision Instance A
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create partition
+      parted:
+        device: /dev/sdb
+        number: 1
+        state: present
+
+    # not using yum because of a bug in Ansible 2.8.0
+    - name: Install xfs tools
+      command: yum -y install xfsprogs
+
+    - name: Create xfs filesystem
+      filesystem:
+        fstype: xfs
+        dev: /dev/sdb1
+
+    - name: Create /dataup directory
+      file:
+        path: /dataup
+        state: directory
+
+    - name: Mount /dev/sdb1 to /dataup
+      mount:
+        path: /dataup
+        src: /dev/sdb1
+        fstype: xfs
+        state: mounted
+
+    - name: Reboot
+      reboot:

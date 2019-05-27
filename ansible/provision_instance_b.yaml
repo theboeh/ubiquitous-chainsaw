@@ -1,0 +1,51 @@
+---
+
+- name: Wait for connection
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: waiting...
+      wait_for_connection:
+
+- name: Provision Instance B
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install xfs and raid tools
+      apt:
+        name: "{{ packages }}"
+        update_cache: yes
+      vars:
+        packages:
+          - mdadm
+          - xfsprogs
+
+    - name: Create raid array
+      command: mdadm --create /dev/md0 --level=0 --raid-devices=2 /dev/xvdb /dev/xvdc
+
+    - name: Persist raid array
+      shell: mdadm --detail --scan | tee -a /etc/mdadm/mdadm.conf
+
+    - name: Update initramfs
+      command: update-initramfs -u
+
+    - name: Create xfs filesystem
+      filesystem:
+        fstype: xfs
+        dev: /dev/md0
+
+    - name: Create /datadown directory
+      file:
+        path: /datadown
+        state: directory
+
+    - name: Mount /dev/md0 to /datadown
+      mount:
+        path: /datadown
+        src: /dev/md0
+        fstype: xfs
+        opts: defaults,nofail,discard
+        state: mounted
+
+    - name: Reboot
+      reboot:
