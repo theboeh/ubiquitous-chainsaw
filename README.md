@@ -39,3 +39,23 @@ Here is the task as it was given to me:
 >
 > * On instance “A” create a test file in the directory /dataup and upload it to the S3 bucket.
 > * On instance “B” pull the test file from the S3 bucket to the /datadown directory.
+
+## Prerequisites 
+
+This process was developed to be run in a Linux environment.
+
+This process assumes you have the following applications installed and executable from your path.
+
+* [GNU Make](https://www.gnu.org/software/make/)
+* [Ansible](https://www.ansible.com/)
+* [Terraform](https://www.terraform.io/)
+
+It also assumes that you have an AWS access key ID and secret access key stored as environment variables called `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+
+## Execution
+
+This process can be executed by running:
+
+    make
+
+
